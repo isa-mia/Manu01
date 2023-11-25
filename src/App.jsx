@@ -1,21 +1,32 @@
-import { useState } from "react";
-import data from "./data";
-import Questions from "./Questions";
-const App = () => {
-  const [questions, setQuestions] = useState(data);
-  const [activeId, setActiveId] = useState(null);
+import React, { useState } from 'react';
+import Menu from './Menu';
+import Categories from './Categories';
+import Title from './Title';
+import items from './data';
+const allCategories = ['all', ...new Set(items.map((item) => item.category))];
 
-  const toggleQuestion = (id) => {
-    const newActiveId = id === activeId ? null : id;
-    setActiveId(newActiveId);
+function App() {
+  const [menuItems, setMenuItems] = useState(items);
+  const [categories, setCategories] = useState(allCategories);
+
+  const filterItems = (category) => {
+    if (category === 'all') {
+      setMenuItems(items);
+      return;
+    }
+    const newItems = items.filter((item) => item.category === category);
+    setMenuItems(newItems);
   };
 
   return (
-    <Questions
-      questions={questions}
-      activeId={activeId}
-      toggleQuestion={toggleQuestion}
-    />
+    <main>
+      <section className='menu'>
+        <Title text='our menu' />
+        <Categories categories={categories} filterItems={filterItems} />
+        <Menu items={menuItems} />
+      </section>
+    </main>
   );
-};
+}
+
 export default App;
